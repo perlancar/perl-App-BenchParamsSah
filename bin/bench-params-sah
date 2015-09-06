@@ -1,0 +1,42 @@
+#!perl
+
+# DATE
+# VERSION
+
+use 5.010001;
+use strict;
+use warnings;
+
+use Benchmark::Dumb qw(cmpthese);
+use Params::Sah qw(gen_validator);
+use Params::Validate qw(:all);
+
+cmpthese(
+    0,
+    {
+        'PS int'     => sub { state $v = gen_validator('int'); $v->(@_) },
+        'PS int x3'  => sub { state $v = gen_validator('int','int','int'); $v->(@_) },
+        'PS int x5'  => sub { state $v = gen_validator('int','int','int','int','int'); $v->(@_) },
+        'PS str'     => sub { state $v = gen_validator('str'); $v->(@_) },
+        'PS str x3'  => sub { state $v = gen_validator('str','str','str'); $v->(@_) },
+        'PV str'     => sub { validate_pos(@_, {type=>'SCALAR', default=>undef}) },
+        'PV str x3'  => sub { validate_pos(@_, {type=>'SCALAR', default=>undef}, {type=>'SCALAR', default=>undef}, {type=>'SCALAR', default=>undef}) },
+    },
+);
+
+# ABSTRACT: Benchmark Params::Sah
+# PODNAME:
+
+=head1 SYNOPSIS
+
+ % bench-params-sah
+
+Sample output:
+
+# COMMAND: perl bin/bench-params-sah
+
+
+=head1 DESCRIPTION
+
+
+=head1 SEE ALSO
